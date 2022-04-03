@@ -1,7 +1,7 @@
-import { render } from "@testing-library/react"
+import { act, render } from "@testing-library/react"
 import userEvent from "@testing-library/user-event"
 import React from "react"
-import { LightMode } from "../src/color-mode-provider"
+import { LightMode } from "../src"
 import {
   DummyComponent,
   getColorModeButton,
@@ -11,7 +11,7 @@ import {
 } from "./utils"
 
 const MemoTest = () => {
-  const [_, setRenderCount] = React.useState(0)
+  const [, setRenderCount] = React.useState(0)
 
   return (
     <>
@@ -24,7 +24,7 @@ const MemoTest = () => {
 }
 
 const NoMemoTest = () => {
-  const [_, setRenderCount] = React.useState(0)
+  const [, setRenderCount] = React.useState(0)
 
   return (
     <>
@@ -60,17 +60,16 @@ describe("<LightMode />", () => {
   test("memoized component renders once", () => {
     const { getByText, getByTestId } = render(<MemoTest />)
 
-    userEvent.click(getByText("Rerender"))
-    userEvent.click(getByText("Rerender"))
-
+    act(() => userEvent.click(getByText("Rerender")))
+    act(() => userEvent.click(getByText("Rerender")))
     expect(getByTestId("rendered")).toHaveTextContent("1")
   })
 
   test("non memoized component renders multiple", () => {
     const { getByText, getByTestId } = render(<NoMemoTest />)
 
-    userEvent.click(getByText("Rerender"))
-    userEvent.click(getByText("Rerender"))
+    act(() => userEvent.click(getByText("Rerender")))
+    act(() => userEvent.click(getByText("Rerender")))
 
     expect(getByTestId("rendered")).toHaveTextContent("3")
   })
