@@ -1,5 +1,4 @@
-import { act, render } from "@testing-library/react"
-import userEvent from "@testing-library/user-event"
+import { userEvent, act, render } from "@chakra-ui/test-utils"
 import React from "react"
 import { LightMode } from "../src"
 import {
@@ -41,7 +40,7 @@ describe("<LightMode />", () => {
     resetCounter()
   })
 
-  test("is always light", () => {
+  test("is always light", async () => {
     render(
       <LightMode>
         <DummyComponent />
@@ -52,24 +51,24 @@ describe("<LightMode />", () => {
 
     expect(button).toHaveTextContent("light")
 
-    userEvent.click(button)
+    await act(() => userEvent.click(button))
 
     expect(getColorModeButton()).toHaveTextContent("light")
   })
 
-  test("memoized component renders once", () => {
+  test("memoized component renders once", async () => {
     const { getByText, getByTestId } = render(<MemoTest />)
 
-    act(() => userEvent.click(getByText("Rerender")))
-    act(() => userEvent.click(getByText("Rerender")))
+    await act(() => userEvent.click(getByText("Rerender")))
+    await act(() => userEvent.click(getByText("Rerender")))
     expect(getByTestId("rendered")).toHaveTextContent("1")
   })
 
-  test("non memoized component renders multiple", () => {
+  test("non memoized component renders multiple", async () => {
     const { getByText, getByTestId } = render(<NoMemoTest />)
 
-    act(() => userEvent.click(getByText("Rerender")))
-    act(() => userEvent.click(getByText("Rerender")))
+    await act(() => userEvent.click(getByText("Rerender")))
+    await act(() => userEvent.click(getByText("Rerender")))
 
     expect(getByTestId("rendered")).toHaveTextContent("3")
   })
