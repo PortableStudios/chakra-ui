@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 import { FormControl, FormHelperText, FormLabel } from "@chakra-ui/form-control"
 import {
+  act,
   testA11y,
   fireEvent,
   render,
@@ -57,12 +58,16 @@ test("should increment on press increment button", () => {
   const upBtn = getByTestId("up-btn")
   const input = getByTestId("input")
 
-  fireEvent.pointerDown(upBtn)
+  act(() => {
+    fireEvent.pointerDown(upBtn)
+  })
   // since the input's value is empty, this will set it to `step`
   // which is `1` by default
   expect(input).toHaveValue("1")
 
-  fireEvent.pointerDown(upBtn)
+  act(() => {
+    fireEvent.pointerDown(upBtn)
+  })
   expect(input).toHaveValue("2")
 })
 
@@ -141,19 +146,21 @@ it("should behave properly with precision value", () => {
   const decBtn = getByTestId("down-btn")
 
   expect(input).toHaveValue("0.00")
-  userEvent.click(incBtn)
+  act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("0.65")
-  userEvent.click(incBtn)
+  act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("1.30")
-  userEvent.click(incBtn)
+  act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("1.95")
-  userEvent.click(decBtn)
+  act(() => userEvent.click(decBtn))
   expect(input).toHaveValue("1.30")
 
   // on blur, value is clamped using precision
-  userEvent.type(input, "1234")
+  act(() => userEvent.type(input, "1234"))
   expect(input).toHaveValue("1.301234")
-  fireEvent.blur(input)
+  act(() => {
+    fireEvent.blur(input)
+  })
   expect(input).toHaveValue("1.30")
 })
 
@@ -163,7 +170,7 @@ test("should call onChange on value change", () => {
 
   const upBtn = getByTestId("up-btn")
 
-  userEvent.click(upBtn)
+  act(() => userEvent.click(upBtn))
 
   expect(onChange).toBeCalled()
   expect(onChange).toBeCalledWith("1", 1)
@@ -174,10 +181,12 @@ test("should constrain value onBlur", () => {
 
   const input = getByTestId("input")
 
-  userEvent.type(input, "34.55")
+  act(() => userEvent.type(input, "34.55"))
 
   // value is beyond max so it should reset to `max`
-  fireEvent.blur(input)
+  act(() => {
+    fireEvent.blur(input)
+  })
 
   expect(input).toHaveValue("30.00")
 })
@@ -188,7 +197,9 @@ test("should focus input on spin", () => {
   const input = getByTestId("input")
   const upBtn = getByTestId("up-btn")
 
-  fireEvent.pointerDown(upBtn)
+  act(() => {
+    fireEvent.pointerDown(upBtn)
+  })
   expect(input).toHaveValue("1")
 
   // for some reason, .toHaveFocus assertion doesn't work
@@ -230,18 +241,24 @@ test("should derive values from surrounding FormControl", () => {
   expect(input).toHaveAttribute("aria-invalid", "true")
   expect(input).toHaveAttribute("aria-describedby")
 
-  fireEvent.focus(input)
+  act(() => {
+    fireEvent.focus(input)
+  })
   expect(onFocus).toHaveBeenCalled()
 
-  fireEvent.blur(input)
+  act(() => {
+    fireEvent.blur(input)
+  })
   expect(onBlur).toHaveBeenCalled()
 })
 
 test("should fallback to min if `e` is typed", () => {
   const { getByTestId } = renderComponent({ max: 30, min: 1 })
   const input = getByTestId("input")
-  userEvent.type(input, "e")
+  act(() => userEvent.type(input, "e"))
   // value is beyond max so it should reset to `max`
-  fireEvent.blur(input)
+  act(() => {
+    fireEvent.blur(input)
+  })
   expect(input).toHaveValue("1")
 })

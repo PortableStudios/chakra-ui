@@ -1,5 +1,5 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
-import { fireEvent, render, userEvent } from "@chakra-ui/test-utils"
+import { act, fireEvent, render, userEvent } from "@chakra-ui/test-utils"
 import * as React from "react"
 import {
   NumberDecrementStepper,
@@ -48,18 +48,20 @@ it("should apply custom format", () => {
   const decBtn = getByTestId("down-btn")
 
   expect(input).toHaveValue("0,00")
-  userEvent.click(incBtn)
+  act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("0,65")
-  userEvent.click(incBtn)
+  act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("1,30")
-  userEvent.click(incBtn)
+  act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("1,95")
-  userEvent.click(decBtn)
+  act(() => userEvent.click(decBtn))
   expect(input).toHaveValue("1,30")
 
   // on blur, value is clamped using precision
-  userEvent.type(input, "1234")
+  act(() => userEvent.type(input, "1234"))
   expect(input).toHaveValue("1,301234")
-  fireEvent.blur(input)
+  act(() => {
+    fireEvent.blur(input)
+  })
   expect(input).toHaveValue("1,30")
 })
