@@ -72,11 +72,11 @@ test("should increment on press increment button", () => {
 })
 
 test("should increase/decrease with keyboard", () => {
-  const { getByTestId } = renderComponent()
+  renderComponent()
 
-  const input = getByTestId("input")
+  const input = screen.getByTestId("input")
 
-  input.focus()
+  act(() => input.focus())
 
   press.ArrowUp(input)
   press.ArrowUp(input)
@@ -134,29 +134,29 @@ test("should increase/decrease by 0.1*step on ctrl+Arrow", () => {
   expect(input).toHaveValue("0.00")
 })
 
-it("should behave properly with precision value", () => {
-  const { getByTestId } = renderComponent({
+it("should behave properly with precision value", async () => {
+  renderComponent({
     defaultValue: 0,
     step: 0.65,
     precision: 2,
   })
 
-  const input = getByTestId("input")
-  const incBtn = getByTestId("up-btn")
-  const decBtn = getByTestId("down-btn")
+  const input = screen.getByTestId("input")
+  const incBtn = screen.getByTestId("up-btn")
+  const decBtn = screen.getByTestId("down-btn")
 
   expect(input).toHaveValue("0.00")
-  act(() => userEvent.click(incBtn))
+  await act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("0.65")
-  act(() => userEvent.click(incBtn))
+  await act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("1.30")
-  act(() => userEvent.click(incBtn))
+  await act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("1.95")
-  act(() => userEvent.click(decBtn))
+  await act(() => userEvent.click(decBtn))
   expect(input).toHaveValue("1.30")
 
   // on blur, value is clamped using precision
-  act(() => userEvent.type(input, "1234"))
+  await act(() => userEvent.type(input, "1234"))
   expect(input).toHaveValue("1.301234")
   act(() => {
     fireEvent.blur(input)
@@ -164,24 +164,24 @@ it("should behave properly with precision value", () => {
   expect(input).toHaveValue("1.30")
 })
 
-test("should call onChange on value change", () => {
+test("should call onChange on value change", async () => {
   const onChange = jest.fn()
-  const { getByTestId } = renderComponent({ onChange })
+  renderComponent({ onChange })
 
-  const upBtn = getByTestId("up-btn")
+  const upBtn = screen.getByTestId("up-btn")
 
-  act(() => userEvent.click(upBtn))
+  await act(() => userEvent.click(upBtn))
 
   expect(onChange).toBeCalled()
   expect(onChange).toBeCalledWith("1", 1)
 })
 
-test("should constrain value onBlur", () => {
-  const { getByTestId } = renderComponent({ max: 30 })
+test("should constrain value onBlur", async () => {
+  renderComponent({ max: 30 })
 
-  const input = getByTestId("input")
+  const input = screen.getByTestId("input")
 
-  act(() => userEvent.type(input, "34.55"))
+  await act(() => userEvent.type(input, "34.55"))
 
   // value is beyond max so it should reset to `max`
   act(() => {
@@ -192,10 +192,10 @@ test("should constrain value onBlur", () => {
 })
 
 test("should focus input on spin", () => {
-  const { getByTestId } = renderComponent()
+  renderComponent()
 
-  const input = getByTestId("input")
-  const upBtn = getByTestId("up-btn")
+  const input = screen.getByTestId("input")
+  const upBtn = screen.getByTestId("up-btn")
 
   act(() => {
     fireEvent.pointerDown(upBtn)
@@ -252,10 +252,10 @@ test("should derive values from surrounding FormControl", () => {
   expect(onBlur).toHaveBeenCalled()
 })
 
-test("should fallback to min if `e` is typed", () => {
-  const { getByTestId } = renderComponent({ max: 30, min: 1 })
-  const input = getByTestId("input")
-  act(() => userEvent.type(input, "e"))
+test("should fallback to min if `e` is typed", async () => {
+  renderComponent({ max: 30, min: 1 })
+  const input = screen.getByTestId("input")
+  await act(() => userEvent.type(input, "e"))
   // value is beyond max so it should reset to `max`
   act(() => {
     fireEvent.blur(input)

@@ -35,7 +35,7 @@ const testNumberInputCustomFormat = {
   },
 }
 
-it("should apply custom format", () => {
+it("should apply custom format", async () => {
   const { getByTestId } = renderComponent({
     defaultValue: 0,
     step: 0.65,
@@ -48,17 +48,17 @@ it("should apply custom format", () => {
   const decBtn = getByTestId("down-btn")
 
   expect(input).toHaveValue("0,00")
-  act(() => userEvent.click(incBtn))
+  await act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("0,65")
-  act(() => userEvent.click(incBtn))
+  await act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("1,30")
-  act(() => userEvent.click(incBtn))
+  await act(() => userEvent.click(incBtn))
   expect(input).toHaveValue("1,95")
-  act(() => userEvent.click(decBtn))
+  await act(() => userEvent.click(decBtn))
   expect(input).toHaveValue("1,30")
 
   // on blur, value is clamped using precision
-  act(() => userEvent.type(input, "1234"))
+  await act(() => userEvent.type(input, "1234"))
   expect(input).toHaveValue("1,301234")
   act(() => {
     fireEvent.blur(input)
