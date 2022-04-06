@@ -1,5 +1,14 @@
 # Change Log
 
+## 1.8.0
+
+### Minor Changes
+
+- [#5772](https://github.com/chakra-ui/chakra-ui/pull/5772)
+  [`7fa1e22c6`](https://github.com/chakra-ui/chakra-ui/commit/7fa1e22c63cdd77364a6bb31d7a60459fd945e3c)
+  Thanks [@mix3d](https://github.com/mix3d)! - Adds vertical and horizontal
+  spacing options to the Wrap component.
+
 ## 1.7.8
 
 ### Patch Changes
